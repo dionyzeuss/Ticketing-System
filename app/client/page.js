@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import loginDesign from "../page.module.css";
 
 export default function ClientPage() {
   const [mode, setMode] = useState("login");
@@ -23,6 +24,7 @@ export default function ClientPage() {
   const loadDashboard = useCallback(async () => {
     try {
       const response = await fetch("/api/client/me");
+
       if (!response.ok) {
         setUser(null);
         return;
@@ -72,7 +74,7 @@ export default function ClientPage() {
         if (ticketsResponse.ok) {
           setTickets(ticketsData.tickets || []);
         } else {
-          setMessage(ticketsData.error || "Unable to load tickets.");
+          setTicketMessage(ticketsData.error || "Unable to load tickets.");
         }
       } catch (error) {
         if (!cancelled) {
@@ -152,6 +154,7 @@ export default function ClientPage() {
       setTicketDescription("");
       setTicketPriority("Medium");
       setTicketMessage("Ticket submitted successfully.");
+
       await loadDashboard();
     } catch {
       setTicketMessage("Unable to connect to the server.");
@@ -193,6 +196,7 @@ export default function ClientPage() {
     (ticket) => ticket.status === "Resolved",
   ).length;
 
+  // Loading screen
   if (loading) {
     return (
       <main style={styles.page}>
@@ -201,6 +205,7 @@ export default function ClientPage() {
     );
   }
 
+  // Client dashboard - existing functionality preserved
   if (user) {
     return (
       <main style={styles.dashboardPage}>
@@ -317,12 +322,14 @@ export default function ClientPage() {
                         <span style={styles.ticketId}>
                           TKT-{String(ticket.id).padStart(4, "0")}
                         </span>
+
                         <span style={statusStyle(ticket.status)}>
                           {ticket.status}
                         </span>
                       </div>
 
                       <h3 style={styles.ticketTitle}>{ticket.title}</h3>
+
                       <p style={styles.ticketDescription}>
                         {ticket.description}
                       </p>
@@ -331,6 +338,7 @@ export default function ClientPage() {
                         <span>
                           Priority: <strong>{ticket.priority}</strong>
                         </span>
+
                         <span>
                           Assigned to:{" "}
                           <strong>{ticket.assignedTo || "Unassigned"}</strong>
@@ -351,93 +359,242 @@ export default function ClientPage() {
     );
   }
 
+  // Redesigned client login and registration page
   return (
-    <main style={styles.page}>
-      <section style={styles.card}>
-        <h1 style={styles.heading}>IT Support Portal</h1>
-        <p style={styles.subtitle}>
-          Sign in to manage your IT support requests.
-        </p>
+    <main className={loginDesign.page}>
+      <div className={loginDesign.gridBackground} aria-hidden="true" />
+      <div className={loginDesign.scanline} aria-hidden="true" />
 
-        <div style={styles.tabs}>
-          <button
-            type="button"
-            onClick={() => {
-              setMode("login");
-              setMessage("");
-            }}
-            style={mode === "login" ? styles.activeTab : styles.tab}
-          >
-            Login
-          </button>
+      <div
+        className={`${loginDesign.orb} ${loginDesign.orbOne}`}
+        aria-hidden="true"
+      />
+      <div
+        className={`${loginDesign.orb} ${loginDesign.orbTwo}`}
+        aria-hidden="true"
+      />
 
-          <button
-            type="button"
-            onClick={() => {
-              setMode("register");
-              setMessage("");
-            }}
-            style={mode === "register" ? styles.activeTab : styles.tab}
-          >
-            Register
-          </button>
-        </div>
+      <div className={loginDesign.layout}>
+        <section className={loginDesign.hero}>
+          <div className={loginDesign.brand}>
+            <div className={loginDesign.brandIcon}>IT</div>
+            <div>
+              <strong>
+                SUPPORT<span>DESK</span>
+              </strong>
+              <small>CLIENT SUPPORT PORTAL</small>
+            </div>
+          </div>
 
-        <form onSubmit={handleSubmit} style={styles.form}>
-          {mode === "register" && (
-            <label style={styles.label}>
-              Full name
+          <div className={loginDesign.status}>
+            <span className={loginDesign.statusDot} />
+            TECHNICAL SUPPORT SYSTEM
+          </div>
+
+          <h1>
+            Your IT issues,
+            <br />
+            <span>our priority.</span>
+          </h1>
+
+          <p className={loginDesign.description}>
+            Submit technical issues, monitor ticket progress, and stay informed
+            as your support requests move toward resolution.
+          </p>
+
+          <div className={loginDesign.machine} aria-hidden="true">
+            <div className={loginDesign.machineRing} />
+            <div className={loginDesign.machineRingInner} />
+
+            <div className={loginDesign.machineCore}>
+              <div className={loginDesign.corePulse} />
+              <span>IT</span>
+              <small>SUPPORT CORE</small>
+            </div>
+
+            <span className={`${loginDesign.gear} ${loginDesign.gearLarge}`}>
+              ⚙
+            </span>
+            <span className={`${loginDesign.gear} ${loginDesign.gearSmall}`}>
+              ⚙
+            </span>
+            <span className={`${loginDesign.gear} ${loginDesign.gearBottom}`}>
+              ⚙
+            </span>
+
+            <div
+              className={`${loginDesign.circuit} ${loginDesign.circuitOne}`}
+            />
+            <div
+              className={`${loginDesign.circuit} ${loginDesign.circuitTwo}`}
+            />
+            <div
+              className={`${loginDesign.circuit} ${loginDesign.circuitThree}`}
+            />
+
+            <span
+              className={`${loginDesign.particle} ${loginDesign.particleOne}`}
+            />
+            <span
+              className={`${loginDesign.particle} ${loginDesign.particleTwo}`}
+            />
+            <span
+              className={`${loginDesign.particle} ${loginDesign.particleThree}`}
+            />
+          </div>
+
+          <div className={loginDesign.features}>
+            <div>
+              <span className={loginDesign.featureIcon}>●</span>
+              Submit support tickets
+            </div>
+            <div>
+              <span className={loginDesign.featureIcon}>●</span>
+              Track ticket status
+            </div>
+            <div>
+              <span className={loginDesign.featureIcon}>●</span>
+              Monitor resolutions
+            </div>
+          </div>
+        </section>
+
+        <section className={loginDesign.loginPanel}>
+          <div className={loginDesign.panelTop}>
+            CLIENT ACCOUNT
+            <span className={loginDesign.panelLine} />
+          </div>
+
+          <h2 className={loginDesign.authHeading}>
+            {mode === "login" ? "Welcome back." : "Create your account."}
+          </h2>
+
+          <p className={loginDesign.authIntro}>
+            {mode === "login"
+              ? "Sign in to access your support tickets and updates."
+              : "Register to submit issues and track your support requests."}
+          </p>
+
+          <div className={loginDesign.authTabs}>
+            <button
+              type="button"
+              onClick={() => {
+                setMode("login");
+                setMessage("");
+              }}
+              className={
+                mode === "login"
+                  ? loginDesign.authTabActive
+                  : loginDesign.authTab
+              }
+            >
+              Sign In
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setMode("register");
+                setMessage("");
+              }}
+              className={
+                mode === "register"
+                  ? loginDesign.authTabActive
+                  : loginDesign.authTab
+              }
+            >
+              Register
+            </button>
+          </div>
+
+          <form onSubmit={handleSubmit} className={loginDesign.authForm}>
+            {mode === "register" && (
+              <label className={loginDesign.authLabel} htmlFor="client-name">
+                Full name
+                <input
+                  id="client-name"
+                  className={loginDesign.authInput}
+                  type="text"
+                  autoComplete="name"
+                  value={name}
+                  onChange={(event) => setName(event.target.value)}
+                  placeholder="Enter your full name"
+                  required
+                />
+              </label>
+            )}
+
+            <label className={loginDesign.authLabel} htmlFor="client-email">
+              Email address
               <input
-                style={styles.input}
-                type="text"
-                value={name}
-                onChange={(event) => setName(event.target.value)}
-                placeholder="Enter your full name"
+                id="client-email"
+                className={loginDesign.authInput}
+                type="email"
+                autoComplete="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="you@example.com"
                 required
               />
             </label>
-          )}
 
-          <label style={styles.label}>
-            Email address
-            <input
-              style={styles.input}
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder="you@example.com"
-              required
-            />
-          </label>
+            <label className={loginDesign.authLabel} htmlFor="client-password">
+              Password
+              <input
+                id="client-password"
+                className={loginDesign.authInput}
+                type="password"
+                autoComplete={
+                  mode === "login" ? "current-password" : "new-password"
+                }
+                minLength={8}
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                placeholder="Enter your password"
+                required
+              />
+            </label>
 
-          <label style={styles.label}>
-            Password
-            <input
-              style={styles.input}
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              placeholder="Enter your password"
-              minLength={8}
-              required
-            />
-          </label>
+            {message && (
+              <p role="alert" className={loginDesign.authMessage}>
+                {message}
+              </p>
+            )}
 
-          {message && <p style={styles.message}>{message}</p>}
+            <button
+              type="submit"
+              disabled={submitting}
+              className={loginDesign.authSubmit}
+            >
+              {submitting
+                ? "Please wait..."
+                : mode === "login"
+                  ? "Sign In to Client Portal →"
+                  : "Create Client Account →"}
+            </button>
+          </form>
 
-          <button type="submit" disabled={submitting} style={styles.submit}>
-            {submitting
-              ? "Please wait..."
-              : mode === "login"
-                ? "Sign In"
-                : "Create Account"}
-          </button>
-        </form>
+          <div className={loginDesign.authSecurity}>
+            <span className={loginDesign.authSecurityIcon}>⌑</span>
+            <span>
+              <strong>Your support workspace</strong>
+              <br />
+              Sign in to manage your requests and track progress.
+            </span>
+          </div>
 
-        <p style={styles.footer}>
-          Need assistance? Contact your IT support team.
-        </p>
-      </section>
+          <p className={loginDesign.footer}>
+            IT SUPPORTDESK
+            <br />
+            <span>CLIENT ACCESS · SUPPORT REQUEST MANAGEMENT</span>
+          </p>
+        </section>
+      </div>
+
+      <div className={loginDesign.bottomBar}>
+        <span>IT SUPPORTDESK</span>
+        <span>CLIENT PORTAL · SUPPORT WHEN YOU NEED IT</span>
+      </div>
     </main>
   );
 }
@@ -454,13 +611,22 @@ function StatCard({ label, value }) {
 function statusStyle(status) {
   const colors = {
     Open: { color: "#fbbf24", background: "#422006" },
-    "In Progress": { color: "#93c5fd", background: "#172554" },
-    Resolved: { color: "#86efac", background: "#052e16" },
+    "In Progress": {
+      color: "#93c5fd",
+      background: "#172554",
+    },
+    Resolved: {
+      color: "#86efac",
+      background: "#052e16",
+    },
   };
 
   return {
     ...styles.statusBadge,
-    ...(colors[status] || { color: "#cbd5e1", background: "#1e293b" }),
+    ...(colors[status] || {
+      color: "#cbd5e1",
+      background: "#1e293b",
+    }),
   };
 }
 
@@ -471,38 +637,38 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     padding: "24px",
-    background: "#080d19",
+    background: "#020617",
     color: "#f8fafc",
     fontFamily: "Arial, sans-serif",
-    boxSizing: "border-box",
   },
   card: {
     width: "100%",
-    maxWidth: "420px",
+    maxWidth: "440px",
     padding: "32px",
-    background: "#111827",
-    border: "1px solid #273449",
+    border: "1px solid #334155",
     borderRadius: "16px",
-    boxSizing: "border-box",
+    background: "#0f172a",
   },
   heading: {
     margin: "0 0 10px",
     fontSize: "28px",
-    textAlign: "center",
   },
   subtitle: {
-    color: "#a8b3c7",
-    textAlign: "center",
-    lineHeight: 1.5,
+    color: "#94a3b8",
+    lineHeight: 1.6,
   },
-  tabs: { display: "flex", gap: "8px", marginBottom: "24px" },
+  tabs: {
+    display: "flex",
+    gap: "10px",
+    margin: "24px 0",
+  },
   tab: {
     flex: 1,
     padding: "12px",
-    border: "1px solid #374151",
+    border: "1px solid #334155",
     borderRadius: "8px",
-    background: "#1f2937",
-    color: "#d1d5db",
+    background: "#0f172a",
+    color: "#cbd5e1",
     cursor: "pointer",
   },
   activeTab: {
@@ -514,57 +680,67 @@ const styles = {
     color: "#ffffff",
     cursor: "pointer",
   },
-  form: { display: "flex", flexDirection: "column", gap: "16px" },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "18px",
+    marginTop: "24px",
+  },
   label: {
     display: "flex",
     flexDirection: "column",
     gap: "8px",
+    color: "#cbd5e1",
     fontSize: "14px",
-    color: "#e2e8f0",
+    fontWeight: 600,
   },
   input: {
-    boxSizing: "border-box",
     width: "100%",
+    boxSizing: "border-box",
     padding: "12px",
-    border: "1px solid #374151",
+    border: "1px solid #334155",
     borderRadius: "8px",
-    background: "#0b1220",
-    color: "#ffffff",
-    fontSize: "15px",
+    background: "#020617",
+    color: "#f8fafc",
+    fontSize: "14px",
   },
   textarea: {
-    boxSizing: "border-box",
     width: "100%",
+    boxSizing: "border-box",
     padding: "12px",
-    border: "1px solid #374151",
+    border: "1px solid #334155",
     borderRadius: "8px",
-    background: "#0b1220",
-    color: "#ffffff",
-    fontSize: "15px",
+    background: "#020617",
+    color: "#f8fafc",
+    fontSize: "14px",
     resize: "vertical",
-    fontFamily: "inherit",
   },
-  message: { margin: 0, color: "#fca5a5", fontSize: "14px" },
+  message: {
+    margin: 0,
+    color: "#fca5a5",
+    fontSize: "14px",
+    lineHeight: 1.5,
+  },
   submit: {
-    padding: "13px",
+    padding: "13px 16px",
     border: "none",
     borderRadius: "8px",
     background: "#2563eb",
     color: "#ffffff",
-    fontWeight: "bold",
+    fontSize: "15px",
+    fontWeight: 700,
     cursor: "pointer",
   },
   footer: {
     marginTop: "24px",
-    marginBottom: 0,
     color: "#94a3b8",
     fontSize: "12px",
+    lineHeight: 1.7,
     textAlign: "center",
-    lineHeight: 1.5,
   },
   dashboardPage: {
     minHeight: "100vh",
-    background: "#080d19",
+    background: "#020617",
     color: "#f8fafc",
     fontFamily: "Arial, sans-serif",
   },
@@ -574,104 +750,151 @@ const styles = {
     justifyContent: "space-between",
     gap: "16px",
     padding: "20px 5%",
-    borderBottom: "1px solid #273449",
-    background: "#111827",
+    borderBottom: "1px solid #1e293b",
+    background: "#0f172a",
   },
-  brand: { margin: 0, fontSize: "22px" },
-  topbarSubtitle: { margin: "5px 0 0", color: "#94a3b8", fontSize: "13px" },
+  brand: {
+    margin: 0,
+    fontSize: "22px",
+  },
+  topbarSubtitle: {
+    margin: "6px 0 0",
+    color: "#94a3b8",
+    fontSize: "13px",
+  },
   logoutButton: {
     padding: "10px 16px",
     border: "1px solid #475569",
     borderRadius: "8px",
-    background: "#1f2937",
+    background: "#1e293b",
     color: "#f8fafc",
     cursor: "pointer",
   },
   dashboardContent: {
-    width: "min(1400px, 92%)",
+    width: "90%",
+    maxWidth: "1400px",
     margin: "0 auto",
-    padding: "32px 0 48px",
+    padding: "36px 0",
   },
-  welcome: { marginBottom: "24px" },
+  welcome: {
+    marginBottom: "28px",
+  },
   eyebrow: {
     color: "#60a5fa",
     fontSize: "12px",
-    fontWeight: "bold",
+    fontWeight: 700,
     letterSpacing: "2px",
   },
-  welcomeHeading: { margin: "8px 0", fontSize: "30px" },
-  muted: { color: "#94a3b8", lineHeight: 1.6, fontSize: "14px" },
+  welcomeHeading: {
+    margin: "10px 0",
+    fontSize: "30px",
+  },
+  muted: {
+    color: "#94a3b8",
+    fontSize: "14px",
+    lineHeight: 1.7,
+  },
   statsGrid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
-    gap: "14px",
-    margin: "24px 0",
+    gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
+    gap: "16px",
+    marginBottom: "28px",
   },
   statCard: {
     padding: "20px",
-    border: "1px solid #273449",
+    border: "1px solid #1e293b",
     borderRadius: "12px",
-    background: "#111827",
+    background: "#0f172a",
   },
-  statLabel: { margin: 0, color: "#94a3b8", fontSize: "13px" },
-  statValue: { margin: "12px 0 0", fontSize: "30px", fontWeight: "bold" },
+  statLabel: {
+    margin: 0,
+    color: "#94a3b8",
+    fontSize: "13px",
+  },
+  statValue: {
+    margin: "12px 0 0",
+    fontSize: "28px",
+    fontWeight: 700,
+  },
   contentGrid: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 360px), 1fr))",
-    gap: "20px",
+    gap: "24px",
     alignItems: "start",
   },
   panel: {
     minWidth: 0,
-    padding: "22px",
-    border: "1px solid #273449",
-    borderRadius: "12px",
-    background: "#111827",
+    padding: "24px",
+    border: "1px solid #1e293b",
+    borderRadius: "14px",
+    background: "#0f172a",
   },
-  sectionHeading: { margin: "0 0 8px", fontSize: "20px" },
+  sectionHeading: {
+    margin: "0 0 10px",
+    fontSize: "20px",
+  },
   empty: {
-    padding: "24px 12px",
-    border: "1px dashed #374151",
+    marginTop: "24px",
+    padding: "24px",
+    border: "1px dashed #334155",
     borderRadius: "10px",
     textAlign: "center",
   },
-  ticketList: { display: "flex", flexDirection: "column", gap: "14px" },
+  ticketList: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "16px",
+    marginTop: "24px",
+  },
   ticket: {
-    padding: "16px",
+    minWidth: 0,
+    padding: "18px",
     border: "1px solid #334155",
     borderRadius: "10px",
-    background: "#0b1220",
-    overflowWrap: "anywhere",
+    background: "#020617",
   },
   ticketHeader: {
     display: "flex",
-    justifyContent: "space-between",
     alignItems: "center",
-    gap: "10px",
+    justifyContent: "space-between",
     flexWrap: "wrap",
+    gap: "10px",
   },
-  ticketId: { color: "#93c5fd", fontSize: "12px", fontWeight: "bold" },
-  statusBadge: {
-    display: "inline-block",
-    padding: "5px 9px",
-    borderRadius: "999px",
+  ticketId: {
+    color: "#60a5fa",
     fontSize: "12px",
-    fontWeight: "bold",
+    fontWeight: 700,
+    letterSpacing: "1px",
   },
-  ticketTitle: { margin: "14px 0 8px", fontSize: "17px" },
+  statusBadge: {
+    padding: "5px 9px",
+    borderRadius: "20px",
+    fontSize: "12px",
+    fontWeight: 700,
+  },
+  ticketTitle: {
+    margin: "16px 0 8px",
+    fontSize: "17px",
+    overflowWrap: "anywhere",
+  },
   ticketDescription: {
     color: "#cbd5e1",
     fontSize: "14px",
-    lineHeight: 1.6,
+    lineHeight: 1.7,
     whiteSpace: "pre-wrap",
+    overflowWrap: "anywhere",
   },
   ticketMeta: {
     display: "flex",
-    flexDirection: "column",
-    gap: "8px",
+    flexWrap: "wrap",
+    gap: "12px 20px",
+    marginTop: "16px",
     color: "#94a3b8",
     fontSize: "12px",
-    marginTop: "16px",
   },
-  ticketDate: { color: "#64748b", fontSize: "12px", marginBottom: 0 },
+  ticketDate: {
+    marginTop: "14px",
+    color: "#64748b",
+    fontSize: "12px",
+  },
 };
