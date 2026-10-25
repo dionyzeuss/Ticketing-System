@@ -1,3 +1,5 @@
+//it-support-system\app\admin\page.js
+
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
@@ -98,6 +100,38 @@ export default function Home() {
 
     return matchesTitle && matchesStatus && matchesPriority;
   });
+
+  async function updateTicketStatus(ticketId, status) {
+    setError("");
+    setSuccess("");
+    setUpdatingTicketId(ticketId);
+
+    try {
+      const response = await fetch(`/api/tickets/${ticketId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Could not update ticket status.");
+      }
+
+      const refreshed = await loadTickets();
+
+      if (refreshed) {
+        setSuccess("Ticket status updated successfully.");
+      }
+    } catch (err) {
+      setError(err.message || "Could not update ticket status.");
+    } finally {
+      setUpdatingTicketId(null);
+    }
+  }
 
   // Assign a ticket to an IT support staff member.
   async function updateTicketAssignment(ticketId, assignedTo) {
@@ -576,6 +610,19 @@ export default function Home() {
 
                       <h3>{ticket.title}</h3>
 
+                      <div className="ticket-client">
+                        <span className="ticket-client-avatar">
+                          {(ticket.client?.name || "U").charAt(0).toUpperCase()}
+                        </span>
+
+                        <div className="ticket-client-info">
+                          <strong>
+                            {ticket.client?.name || "Unknown client"}
+                          </strong>
+                          <span>{ticket.client?.email || "Not available"}</span>
+                        </div>
+                      </div>
+
                       <p className="ticket-description">{ticket.description}</p>
 
                       <div className="ticket-tags">
@@ -698,8 +745,19 @@ export default function Home() {
                   ×
                 </button>
               </div>
+
               <h3 className="details-title">{viewingTicket.title}</h3>
+
+              <div className="details-client">
+                <span className="details-client-label">SUBMITTED BY</span>
+                <strong>
+                  {viewingTicket.client?.name || "Unknown client"}
+                </strong>
+                <span>{viewingTicket.client?.email || "Not available"}</span>
+              </div>
+
               <p className="details-description">{viewingTicket.description}</p>
+
               <div className="details-grid">
                 <div>
                   <span>Priority</span>
